@@ -73,6 +73,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -152,6 +154,7 @@
     <ClInclude Include="CSpellBook.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="ESpellSlot.h" />
+    <ClInclude Include="GFuncs.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="imgui\dx9\imgui_impl_dx9.h" />
     <ClInclude Include="imgui\imconfig.h" />

@@ -9,8 +9,7 @@ class CSpellBook {
 public:
 
 	SpellSlot* GetSpellSlotByID(int ID) {
-		return *(SpellSlot**)((DWORD)this + 0x508 + (0x4 * ID));
-
+		return *(SpellSlot**)((DWORD)this + 0x478 + (0x4 * ID));
 	}
 
 };

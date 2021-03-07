@@ -51,6 +51,9 @@
     <Filter Include="Header\ImGui\win32">
       <UniqueIdentifier>{91e3208b-eec4-4d26-934e-2528e2aaa015}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\GFuncs">
+      <UniqueIdentifier>{2962b9b7-6fda-4be4-8c55-a7b69714d75a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="ImRender.hpp">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GFuncs.h">
+      <Filter>Header\GFuncs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

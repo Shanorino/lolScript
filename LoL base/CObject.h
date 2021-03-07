@@ -152,10 +152,10 @@ public:
 	bool IsEnemyTo(CObject* Obj) {
 		if (Obj->GetTeam() == 100 && this->GetTeam() == 200)
 			return true;
-
 		else if (Obj->GetTeam() == 200 && this->GetTeam() == 100)
 			return true;
-
+		//else if (Obj->GetTeam() == 300)
+		//	return true;
 		return false;
 	}
 	bool Isjungle(CObject* Obj) {

@@ -43,9 +43,22 @@ public:
 
 	static CObject* Engine::GetObjectByID(int ID)
 	{
+		CObject* obj = NULL;
 		if (ObjManager != NULL && ID >= 0 && ID <= 10000) {
+			obj = ObjManager->GetObjByIndex(ID);
+			if ((UINT)obj < 0x1000000) 
+			{
+				return NULL;
+			}
+			else if ((UINT)obj < 0xF000000)
+			{
+				return NULL;
+			}
+			return obj;
+			//return ObjManager->GetObjByIndex(ID);
 			//return ObjManager->objectArray[ID];
 		}
+		return NULL;
 	}
 
 	static void MoveTo(Vector* pos) {
@@ -62,6 +75,7 @@ public:
 
 	static void Engine::CastSpellSelf(int SlotID) {
 		if (me->IsAlive()) {
+			//auto spellbook = (DWORD)(baseAddr + oObjSpellBook);
 			auto spellbook = (DWORD)me + oObjSpellBook;
 			auto spellslot = me->GetSpellBook()->GetSpellSlotByID(SlotID);
 			Functions.CastSpell(spellbook, spellslot, SlotID, &me->GetPos(), &me->GetPos(), 0);

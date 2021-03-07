@@ -1,11 +1,13 @@
-#include <time.h>
+ï»¿#include <time.h>
 #include "stdafx.h"
 #include "Windows.h"
 #include "Engine.h"
 #include "Hooks.h"
 #include "detours.h"
+#include "GFuncs.h"
 #include "ImRender.hpp"
 #include <mutex>
+
 
 
 #include "imgui\imgui.h"
@@ -22,11 +24,12 @@ using namespace std;
 
 CObjectManager* ObjManager;
 CFunctions Functions;
+GFuncs* gFuncs = new GFuncs();
 
 HMODULE g_module = nullptr;
 HWND g_hwnd = nullptr;
 WNDPROC g_wndproc = nullptr;
-bool g_menu_opened = false;
+bool g_menu_opened = true;
 bool g_range = false;
 bool g_unload = false;
 bool g_2range_objmanager = false;
@@ -34,6 +37,10 @@ bool g_champ_info = false;
 bool g_move_to_mouse = false;
 bool g_w2s_line = false;
 bool OnStartMessage = false;
+bool low_health_reaction = true;
+bool f_10_flag = true;
+char text1[15] = "100";
+
 
 bool g_interface = false;
 IDirect3DDevice9* myDevice;
@@ -54,46 +61,44 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 		ImGui::CreateContext();											
 		render.begin_draw();//begin for draw rende.drawline.... and etc
 
+	if (me)
+	{
+		// low health reaction
+		gFuncs->autoSkillR();
 
+		//gFuncs->setup();
+		//gFuncs->autoMinionKill();
+	}
 
+	if (GetAsyncKeyState(VK_F11) & 0x1) 
+	{ 
+		// test functions here
+		if (me->IsAlive())
+		{
+			gFuncs->setup();
+			gFuncs->autoMinionKill();
+			//Beep(1000, 300);
+		}
+	}
 
-	///////////////////////////////////////////////
-	///				\\	Print Chat	//			///	
-	//from float to char///////////////////////////
-	char Get_Healthe[10];						///					
-	sprintf(Get_Healthe, "%f", me->GetHealth());///
-	////////////////////////////////////////////////////////////////////
-																	////
-	if (OnStartMessage == true) {									//// need fix ofset for print chat
-		Engine::PrintChat("///////  Kmsmym update lolbase");		////
-		Engine::PrintChat("///////  Unknowncheats.me");				////	
-		Engine::PrintChat("///////  My health");					////
-		Engine::PrintChat("///////////////////////////////	 ");	////
-		Engine::PrintChat(Get_Healthe);								////
-		Engine::PrintChat("///////////////////////////////	 ");	////
-		OnStartMessage = true;										////
-	}																////
-	////////////////////////////////////////////////////////////////////
-
-
-
-
-
+	if (GetAsyncKeyState(VK_F10) & 0x1) { g_menu_opened = !g_menu_opened; Beep(1500,100); }
 	if (ImGui_ImplWin32_Init(g_hwnd))
 	{
 		if (ImGui_ImplDX9_Init(Device))
 		{
 			if (g_menu_opened)
 			{
-				ImGui::Begin("kmsmym::unknowncheats.me", &g_menu_opened, ImGuiWindowFlags_NoSavedSettings);
+				ImGui::Begin("chi gou que que", &g_menu_opened, ImGuiWindowFlags_NoSavedSettings);
 				{
 					ImGui::BeginChild("##child", ImVec2(450.0f, 450.0f), false, ImGuiWindowFlags_NoSavedSettings);
 					{
-						ImGui::Checkbox("My range demostration", &g_range);
+						ImGui::InputText("Kai R HP", text1, IM_ARRAYSIZE(text1));
+						ImGui::Checkbox("__xxxx__ HP kai R", &f_10_flag);
+						/*ImGui::Checkbox("My range demostration", &g_range);
 						ImGui::Checkbox("All hero range demostration", &g_2range_objmanager);
 						ImGui::Checkbox("Move to mouse demostration", &g_move_to_mouse);
 						ImGui::Checkbox("W2S/Line demostration", &g_w2s_line);
-						ImGui::Checkbox("Text champ info demostration", &g_champ_info);
+						ImGui::Checkbox("Text champ info demostration", &g_champ_info);*/
 					}
 					ImGui::EndChild();
 				}
@@ -221,6 +226,7 @@ DWORD GetDeviceAddress(int VTableIndex)
 
 LRESULT WINAPI WndProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param);
 typedef long(__stdcall* tEndScene)(LPDIRECT3DDEVICE9);
+
 void __stdcall Start() {
 	while (Engine::GetGameTime() < 1.0f || !me)
 		Sleep(1);
@@ -242,7 +248,7 @@ void __stdcall Start() {
 	Functions.IsInhibitor = (Typedefs::fnIsInhibitor)(baseAddr + oIsInhib);
 	Functions.IsTroyEnt = (Typedefs::fnIsTroyEnt)(baseAddr + oIsTroy);
 
-	//Functions.CastSpell = (Typedefs::fnCastSpell)((DWORD)GetModuleHandle(NULL) + oCastSpell);
+	Functions.CastSpell = (Typedefs::fnCastSpell)((DWORD)GetModuleHandle(NULL)); // + oCastSpell);
 	Functions.IssueOrder = (Typedefs::fnIssueOrder)((DWORD)GetModuleHandle(NULL) + oIssueOrder);
 	Functions.DrawCircle = (Typedefs::fnDrawCircle)((DWORD)GetModuleHandle(NULL) + oDrawCircle);
 	Functions.WorldToScreen = (Typedefs::WorldToScreen)(baseAddr + (DWORD)oWorldToScreen);
@@ -334,7 +340,7 @@ LRESULT WINAPI WndProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
 	switch (u_msg)
 	{
 	case WM_KEYDOWN:
-		if (w_param == VK_END) /* òâîÿ êíîïêà òóò */
+		if (w_param == VK_END) /* Ã²Ã¢Ã®Ã¿ ÃªÃ­Ã®Ã¯ÃªÃ  Ã²Ã³Ã² */
 			g_menu_opened = !g_menu_opened;
 		break;
 	default:
@@ -356,6 +362,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		DisableThreadLibraryCalls(hModule);
 
 	if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
+		//Beep(2000, 1000);
 		g_module = hModule;
 		CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Start, 0, 0, 0);
 		return TRUE;

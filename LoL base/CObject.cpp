@@ -3,11 +3,13 @@
 #include "Engine.h"
 
 bool CObject::IsAlive() {
-	return Functions.IsAlive(this) && this->GetHealth() > 0.0f;
+	return this->GetHealth() > 0.0f;
+	//return Functions.IsAlive(this) && this->GetHealth() > 0.0f;
 }
 
 bool CObject::IsMinion() {
-	return Functions.IsMinion(this);
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::Minion);
+	//return Functions.IsMinion(this);
 }
 
 bool CObject::IsTurret() {
