@@ -64,10 +64,13 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 	if (me)
 	{
 		// low health reaction
-		gFuncs->autoSkillR();
+		gFuncs->autoSkillR(text1, low_health_reaction, f_10_flag);
+	}
 
-		//gFuncs->setup();
-		//gFuncs->autoMinionKill();
+	if (GetAsyncKeyState(VK_SPACE) & 0x1)
+	{
+		gFuncs->setup();
+		gFuncs->autoRunAndKill();
 	}
 
 	if (GetAsyncKeyState(VK_F11) & 0x1) 

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 
 class GFuncs 
 {
@@ -33,10 +34,29 @@ public:
 		}
 	}
 
-	void autoSkillR()
+	CObject* findNearestEnemy(CObject* localObj, std::vector<CObject*> list)
 	{
-		int healthLimitR = std::atoi(text1);
-		if (me->GetHealth() < healthLimitR && low_health_reaction && f_10_flag)
+		CObject* nearestObj = NULL;
+		float nearestDist = 9999;
+		for (std::size_t i = 1; i < list.size(); i++)
+		{
+			CObject* currObj = list[i];
+			// only enemy
+			if (!currObj->IsEnemyTo(localObj)) continue;
+			// find smallest distance
+			float currDistToLObj = localObj->GetPos().DistTo(currObj->GetPos());
+			if (currDistToLObj < nearestDist)
+			{
+				nearestObj = currObj;
+			}
+		}
+		return nearestObj;
+	}
+
+	void autoSkillR(char* textFromMenu, bool &reactionFlag, bool &keyFlag)
+	{
+		int healthLimitR = std::atoi(textFromMenu);
+		if (me->GetHealth() < healthLimitR && reactionFlag && keyFlag)
 		{
 			//Engine::MoveTo(new Vector{ 0, 0, 0});
 			for (int i = 0; i < 1; i++)
@@ -48,11 +68,25 @@ public:
 			//Functions.CastSpell()
 			//Engine::CastSpellSelf(2);
 			//Beep(2000, 1000);
-			low_health_reaction = false;
+			reactionFlag = false;
 		}
-		else if (me->GetHealth() > healthLimitR && !low_health_reaction && f_10_flag)
+		else if (me->GetHealth() > healthLimitR && !reactionFlag && keyFlag)
 		{ 
-			low_health_reaction = true; 
+			reactionFlag = true;
+		}
+	}
+
+	void autoRunAndKill()
+	{
+		// find nearest hero
+		CObject* nearestHero = findNearestEnemy(me, HeroList);
+		if (nearestHero)
+		{
+			float distToHero = me->GetPos().DistTo(nearestHero->GetPos());
+			if (distToHero < 700)
+			{
+				Engine::AttackTarget(nearestHero);
+			}
 		}
 	}
 

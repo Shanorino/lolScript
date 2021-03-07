@@ -83,6 +83,7 @@ public:
 
 		return (objectId & objectTypeFlag) != 0;
 	}
+
 	CObject* GetFirstObject()
 	{
 		typedef CObject* (__thiscall* fnGetFirst)(void*);
