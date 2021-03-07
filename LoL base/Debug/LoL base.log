@@ -1,0 +1,6 @@
+﻿  CObject.cpp
+  ImRender.cpp
+  Generating Code...
+  dllmain.cpp
+C:\experiments\lolbase-imgui-10.16\LoL base\dllmain.cpp(183,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  LoL base.vcxproj -> C:\experiments\lolbase-imgui-10.16\Debug\LoL base.dll
