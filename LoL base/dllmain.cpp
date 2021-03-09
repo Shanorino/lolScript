@@ -39,7 +39,10 @@ bool g_w2s_line = false;
 bool OnStartMessage = false;
 bool low_health_reaction = true;
 bool f_10_flag = true;
+bool space_flag = true;
 char text1[15] = "100";
+char attackRunRange[5] = "700";
+char rFrequency[2] = "2";
 
 
 bool g_interface = false;
@@ -64,13 +67,18 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 	if (me)
 	{
 		// low health reaction
-		gFuncs->autoSkillR(text1, low_health_reaction, f_10_flag);
+		gFuncs->autoSkillR(text1, low_health_reaction, f_10_flag, rFrequency);
 	}
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x1)
+	if ((GetAsyncKeyState(VK_SPACE) & 0x1) && space_flag)
 	{
 		gFuncs->setup();
 		gFuncs->autoRunAndKill();
+	}
+
+	if (GetAsyncKeyState(VK_F12) & 0x1)
+	{
+		ImGui::ShowDemoWindow();
 	}
 
 	if (GetAsyncKeyState(VK_F11) & 0x1) 
@@ -95,8 +103,13 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 				{
 					ImGui::BeginChild("##child", ImVec2(450.0f, 450.0f), false, ImGuiWindowFlags_NoSavedSettings);
 					{
+						ImGui::InputText("Kai R Ci Shu", rFrequency, IM_ARRAYSIZE(rFrequency));
 						ImGui::InputText("Kai R HP", text1, IM_ARRAYSIZE(text1));
-						ImGui::Checkbox("__xxxx__ HP kai R", &f_10_flag);
+						ImGui::Checkbox("Zi Dong Kai R", &f_10_flag);
+						ImGui::InputText("Zou Kan Fan Wei走砍", attackRunRange, IM_ARRAYSIZE(attackRunRange));
+						ImGui::Checkbox("Zou Kan", &space_flag);
+						//ImGui::ShowDemoWindow();
+						//ImGui::Text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)");
 						/*ImGui::Checkbox("My range demostration", &g_range);
 						ImGui::Checkbox("All hero range demostration", &g_2range_objmanager);
 						ImGui::Checkbox("Move to mouse demostration", &g_move_to_mouse);
@@ -277,6 +290,11 @@ void __stdcall Start() {
 LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto& io = ImGui::GetIO();
+	ImFontConfig font_config;
+	font_config.OversampleH = 1;
+	font_config.OversampleV = 1; 
+	font_config.PixelSnapH = 1;
+	ImFont* f = io.Fonts->AddFontFromFileTTF("c:\SimHei.ttf", 18.0f, &font_config, io.Fonts->GetGlyphRangesChineseFull());
 
 	switch (msg)
 	{
@@ -333,8 +351,26 @@ LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lPara
 		if (wParam > 0 && wParam < 0x10000)
 			io.AddInputCharacter((unsigned short)wParam);
 		return true;
+    //case WM_IME_CHAR:
+    //{
+    //    DWORD wChar = wParam;
+    //    if (wChar <= 127)
+    //    {
+    //        io.AddInputCharacter(wChar);
+    //    }
+    //    else
+    //    {
+    //        // swap lower and upper part.
+    //        BYTE low = (BYTE)(wChar & 0x00FF);
+    //        BYTE high = (BYTE)((wChar & 0xFF00) >> 8);
+    //        wChar = MAKEWORD(high, low);
+    //        wchar_t ch[6];
+    //        MultiByteToWideChar(CP_ACP, 0, (LPCSTR)&wChar, 4, ch, 3);
+    //        io.AddInputCharacter(ch[0]);
+    //    }
+    //    return 0;
+    //}
 	}
-
 	return 0;
 }
 

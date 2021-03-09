@@ -17,7 +17,7 @@
 #define oGetNextObject 0x2BCCA0    //E8 ? ? ? ? 8B F0 85 F6 75 E4
 #define oGameVersion 0x57FB60     //												8B 44 24 04 BA ? ? ? ? 2B D0						//
 // FUNCTIONS
-#define oCastSpell 0x4D7F20
+#define oCastSpell 0x4F0660
 #define oDrawCircle 0x50E1F0 
 #define oGetBasicAttack 0x1774A0 
 #define oGetAttackCastDelay 0x2B6360 

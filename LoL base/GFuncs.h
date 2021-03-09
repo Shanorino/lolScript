@@ -53,10 +53,13 @@ public:
 		return nearestObj;
 	}
 
-	void autoSkillR(char* textFromMenu, bool &reactionFlag, bool &keyFlag)
+	void autoSkillR(char* textFromMenu, bool &reactionFlag, bool &keyFlag, char* autoSkillTimes)
 	{
 		int healthLimitR = std::atoi(textFromMenu);
-		if (me->GetHealth() < healthLimitR && reactionFlag && keyFlag)
+		int autoSkill = std::atoi(autoSkillTimes);
+		if (autoSkill == 0)
+			autoSkill = 1;
+		if (me->GetHealth() < healthLimitR && me->GetHealth() > 0 && reactionFlag && keyFlag)
 		{
 			//Engine::MoveTo(new Vector{ 0, 0, 0});
 			for (int i = 0; i < 1; i++)

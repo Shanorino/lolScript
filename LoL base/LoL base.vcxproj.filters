@@ -160,5 +160,8 @@
     <ClCompile Include="ImRender.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Source\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
